@@ -3,10 +3,11 @@
 
 import numpy as np
 
+
 # relu = lambda x: np.maximum(x, 0, x)
 
 def relu(vec):
-    return np.maximum(vec,0)
+    return np.maximum(vec, 0)
 
 
 # todo - delete.
@@ -87,32 +88,34 @@ def train_func(W1, b1, W2, b2, epochs, train_x, train_y, valid_x, valid_y):
         for x, y in zip(train_x, train_y):
             x = np.reshape(x, (1, 784))
             y_hat, z1, z2, h1 = forward_propagation(W1, b1, W2, b2, x, y)
-            W1_grad, W2_grad, b1_grad, b2_grad = backward_propagation(y_hat, z1, z2, h1, W1, b1, W2, b2, x, y)
-            W1, W2, b1, b2 = update_weights(W1, W2, b1, b2,W1_grad, W2_grad, b1_grad, b2_grad)
+            W1_grad, W2_grad, b1_grad, b2_grad = backward_propagation(y_hat, z1, z2, h1, W1, b1, W2,
+                                                                      b2, x, y)
+            W1, W2, b1, b2 = update_weights(W1, W2, b1, b2, W1_grad, W2_grad, b1_grad, b2_grad)
         acc = get_accuracy(W1, b1, W2, b2, valid_x, valid_y)
         print(acc * 100)
-    return W1,  W2, b1, b2
+    return W1, W2, b1, b2
 
 
 def main():
     epochs = 20
     max = 0.05
     min = -0.05
-    hidden_layers = 142
+    hidden_layers = 120
     # todo - uniform - random numbers between to numbers.
     W1 = np.random.uniform(min, max, [hidden_layers, 784])
     W2 = np.random.uniform(min, max, [10, hidden_layers])
     b1 = np.random.uniform(min, max, [hidden_layers, 1])
     b2 = np.random.uniform(min, max, [10, 1])
-    x_training_set = get_file("train_x.txt")
-    y_training_set = get_file("train_y.txt")
+    x_training_set = get_file("X.txt")
+    y_training_set = get_file("Y.txt")
     x_testing_set = get_file("test_x.txt")
     train_zipped = list(zip(x_training_set, y_training_set))
     np.random.shuffle(train_zipped)
     training_size = x_training_set.shape[0]
     validation_size = (int)(training_size * (1 / 6))
     valid_x, valid_y = x_training_set[-validation_size:, :], y_training_set[-validation_size:]
-    x_training_set, y_training_set = x_training_set[:-validation_size, :], y_training_set[:-validation_size]
+    x_training_set, y_training_set = x_training_set[:-validation_size, :], y_training_set[
+                                                                           :-validation_size]
     train_func(W1, b1, W2, b2, epochs, x_training_set, y_training_set, valid_x, valid_y)
 
 
